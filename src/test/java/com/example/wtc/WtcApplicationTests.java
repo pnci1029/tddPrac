@@ -67,12 +67,16 @@ class WtcApplicationTests {
 	@DisplayName("문자만 사용한 비밀번호")
 	@Test
 	void useOnlyLetters() {
+		assertPasswordStrong("SDASDASDA",PasswordString.MIDDLE);
 		assertPasswordStrong("QWeqwrqwq",PasswordString.MIDDLE);
+		assertPasswordStrong("sadsadaA",PasswordString.MIDDLE);
 	}
 
 	@DisplayName("대문자가 없는 비밀번호")
 	@Test
 	void NoUpperCase() {
 		assertPasswordStrong("1234qwerq", PasswordString.WEEK);
+		assertPasswordStrong("fdsf1212e", PasswordString.WEEK);
+		assertPasswordStrong("asdasf132", PasswordString.WEEK);
 	}
 }

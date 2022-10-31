@@ -7,7 +7,9 @@ public class PasswordCheck {
         if (data == null || data.equals("")) {
             throw new IllegalArgumentException();
         }
+
         boolean lengthRule = data.length() >= 8;
+
 //        문자만 사용한 경우
         if (!numberRule(data) && uppercaseRule(data)) {
             return PasswordString.MIDDLE;
