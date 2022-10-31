@@ -35,34 +35,44 @@ class WtcApplicationTests {
 				);
 	}
 
+	private void assertPasswordStrong(String a, PasswordString passwordString) {
+		PasswordString input = passwordCheck.input(a);
+		assertThat(input).isEqualTo(passwordString);
+	}
+
 	@DisplayName("비밀번호 강도 높음")
 	@Test
 	void inputStrongPassword() {
-		PasswordString result = passwordCheck.input("12Qw34qw");
-		assertThat(result).isEqualTo(PasswordString.STRONG);
-		PasswordString result2 = passwordCheck.input("1234Qwer");
-		assertThat(result2).isEqualTo(PasswordString.STRONG);
-		PasswordString result3 = passwordCheck.input("1Q2w3e4r");
-		assertThat(result3).isEqualTo(PasswordString.STRONG);
+		assertPasswordStrong("12Qw34qw", PasswordString.STRONG);
+		assertPasswordStrong("1234Qwer", PasswordString.STRONG);
+		assertPasswordStrong("1Q2w3e4r", PasswordString.STRONG);
 	}
 
 	@DisplayName("길이 8미만 다른조건 충족")
 	@Test
 	void lengthException() {
-		PasswordString result = passwordCheck.input("123Qwe");
-		assertThat(result).isEqualTo(PasswordString.WEEK);
-		PasswordString result2 = passwordCheck.input("qwwe123");
-		assertThat(result2).isEqualTo(PasswordString.WEEK);
-		PasswordString result3 = passwordCheck.input("123456q");
-		assertThat(result3).isEqualTo(PasswordString.WEEK);
+		assertPasswordStrong("123Qwe", PasswordString.WEEK);
+		assertPasswordStrong("qwwe123", PasswordString.WEEK);
+		assertPasswordStrong("123456q", PasswordString.WEEK);
 	}
 
 	@DisplayName("숫자만 사용한 비밀번호")
 	@Test
 	void useOnlyNumbers() {
-		assertThatIllegalArgumentException()
-				.isThrownBy(
-						() -> passwordCheck.input("12345678")
-				);
+		assertPasswordStrong("123124111",PasswordString.WEEK);
+		assertPasswordStrong("11111111111",PasswordString.WEEK);
+		assertPasswordStrong("153145332",PasswordString.WEEK);
+	}
+
+	@DisplayName("문자만 사용한 비밀번호")
+	@Test
+	void useOnlyLetters() {
+		assertPasswordStrong("QWeqwrqwq",PasswordString.MIDDLE);
+	}
+
+	@DisplayName("대문자가 없는 비밀번호")
+	@Test
+	void NoUpperCase() {
+		assertPasswordStrong("1234qwerq", PasswordString.WEEK);
 	}
 }

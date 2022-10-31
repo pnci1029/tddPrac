@@ -7,26 +7,46 @@ public class PasswordCheck {
         if (data == null || data.equals("")) {
             throw new IllegalArgumentException();
         }
-//        입력값이 8자 미만일때
-        if (data.length() < 8) {
-            return PasswordString.WEEK;
+        boolean lengthRule = data.length() >= 8;
+//        문자만 사용한 경우
+        if (!numberRule(data) && uppercaseRule(data)) {
+            return PasswordString.MIDDLE;
         }
 //        숫자만 사용한 경우
-        countLength(data);
+        if (!numberRule(data)) {
+            return PasswordString.WEEK;
+        }
+//        입력값이 8자 미만일때
+        if (!lengthRule) {
+            return PasswordString.WEEK;
+        }
+//        대문자가 없는 경우
+        if (!uppercaseRule(data)) {
+            return PasswordString.WEEK;
+        }
+
+        String[] box = data.split("");
 
         return PasswordString.STRONG;
     }
 
-    public static void countLength(String data) {
-        int numbCount = 0;
-        char[] dataBox = data.toCharArray();
-        for (char box : dataBox) {
-            if (box >= 48 && box <= 57) {
-                numbCount++;
+    public boolean uppercaseRule(String data) {
+        char[] chars = data.toCharArray();
+        for (char target : chars) {
+            if (target >= 'A' && target <= 'Z') {
+                return true;
             }
         }
-        if (numbCount == dataBox.length) {
-            throw new IllegalArgumentException();
+        return false;
+    }
+
+    public boolean numberRule(String data) {
+        char[] chars = data.toCharArray();
+        for (char target : chars) {
+            if (target >= '0' && target <= '9') {
+                return true;
+            }
         }
+        return false;
     }
 }
